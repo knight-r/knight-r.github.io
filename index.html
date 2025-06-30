@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayush Kushwaha - Android Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .profile-image-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #667eea;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-image-container:hover .upload-overlay {
+            opacity: 1;
+        }
+
+        .upload-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        .profile-info h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .profile-info h2 {
+            color: #666;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item:hover {
+            color: #667eea;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Education & Experience Cards */
+        .card {
+            background: linear-gradient(135deg, #f8f9ff, #e8efff);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .card .meta {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .card li::before {
+            content: '▶';
+            color: #667eea;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .skill-category {
+            background: linear-gradient(135deg, #f8f9ff, #e8efff);
+            padding: 25px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-category h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* Achievements Grid */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .achievement-card {
+            background: linear-gradient(135deg, #fff7e6, #ffeaa7);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #fdcb6e;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-card h4 {
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        /* Project Card */
+        .project-card {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #4caf50;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .project-link {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .project-link:hover {
+            background: #45a049;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Hidden file input */
+        #profileImageInput {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-info h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .contact-info {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="profile-section">
+                <div class="profile-image-container">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Ccircle cx='75' cy='75' r='75' fill='%23667eea'/%3E%3Ctext x='75' y='85' font-family='Arial, sans-serif' font-size='60' fill='white' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" alt="Ayush Kushwaha" class="profile-image" id="profileImage">
+                    <div class="upload-overlay" onclick="document.getElementById('profileImageInput').click()">
+                        <i class="fas fa-camera upload-icon"></i>
+                    </div>
+                    <input type="file" id="profileImageInput" accept="image/*">
+                </div>
+                <div class="profile-info">
+                    <h1>Ayush Kushwaha</h1>
+                    <h2>Software Engineer - Android Developer</h2>
+                    <div class="contact-info">
+                        <a href="mailto:kushwahaayush61@gmail.com" class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            kushwahaayush61@gmail.com
+                        </a>
+                        <a href="tel:+919129442390" class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            +91 9129442390
+                        </a>
+                        <a href="https://github.com/knight-r" class="contact-item" target="_blank">
+                            <i class="fab fa-github"></i>
+                            GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/ayush-kushwaha-b455461a1/" class="contact-item" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-section="about">About</a>
+                <a href="#" class="nav-link" data-section="experience">Experience</a>
+                <a href="#" class="nav-link" data-section="education">Education</a>
+                <a href="#" class="nav-link" data-section="projects">Projects</a>
+                <a href="#" class="nav-link" data-section="skills">Skills</a>
+                <a href="#" class="nav-link" data-section="achievements">Achievements</a>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="content-section active" id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="card">
+                <p style="font-size: 1.1rem; text-align: center; line-height: 1.8;">
+                    Passionate Android Developer with expertise in Native Android Development using Kotlin. 
+                    Currently working at Tekion Corp, focusing on building high-performance mobile applications 
+                    with clean architecture and efficient code. I have a strong background in competitive programming 
+                    with 2000+ solved problems across various platforms and achievements in Google Code Jam and Kick Start.
+                </p>
+            </div>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="content-section" id="experience">
+            <h2 class="section-title">Work Experience</h2>
+            
+            <div class="card">
+                <h3>Associate Software Engineer - Tekion Corp</h3>
+                <div class="meta">July 2023 - Present</div>
+                <ul>
+                    <li>Working with Native Android Development team</li>
+                    <li>Developed custom Camera using <strong>Camera2 API</strong> with features like capture photos/videos, merging multiple videos</li>
+                    <li>Built <strong>Gallery</strong> functionality with image rotation and video trimming capabilities</li>
+                    <li>Created multipart media uploader for enhanced performance</li>
+                    <li>Optimized app performance by converting heavy React Native libraries to NativeModules</li>
+                    <li><strong>Technologies:</strong> Kotlin, Camera2 API, MVVM Architecture, Kotlin-Coroutines, WorkManager</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Associate Software Engineer Intern - Tekion Corp</h3>
+                <div class="meta">January 2023 - June 2023</div>
+                <ul>
+                    <li>Gained expertise in <strong>Kotlin</strong> language and learned to write <strong>Clean</strong> and <strong>Efficient</strong> code</li>
+                    <li>Developed multiple Android applications including <strong>NEATFLIX</strong>, <strong>WeatherApp</strong>, and <strong>Room DB App</strong></li>
+                    <li>Mastered MVVM Architecture, Retrofit, Kotlin-Coroutines, Navigation Architecture Components, and Room Database</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="content-section" id="education">
+            <h2 class="section-title">Education</h2>
+            
+            <div class="card">
+                <h3>Indian Institute of Information Technology (IIIT), Lucknow</h3>
+                <div class="meta">Bachelor of Technology in Information Technology | July 2019 - June 2023</div>
+                <p><strong>GPA:</strong> 8.14/10</p>
+            </div>
+
+            <div class="card">
+                <h3>M.V. Convent Inter College, Prayagraj</h3>
+                <div class="meta">Sr. Secondary Education in PCM (CBSE) | April 2018 - May 2019</div>
+                <p><strong>Percentage:</strong> 89.20%</p>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="content-section" id="projects">
+            <h2 class="section-title">Projects</h2>
+            
+            <div class="project-card">
+                <h3><i class="fas fa-book"></i> IIITL Library Automation App (Team Project)</h3>
+                <p><strong>Description:</strong> An Android application that helps college students view available books 
+                and enables library managers to update book details and track issued books to students.</p>
+                <p><strong>Technologies:</strong> Android Studio, Java, OOPs, Firebase DB, Google API, Git/GitHub</p>
+                <a href="https://github.com/knight-r/IIIT-Lucknow-LIbrary-Automation" class="project-link" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+
+            <div class="project-card">
+                <h3><i class="fas fa-video"></i> NEATFLIX</h3>
+                <p>A Netflix-inspired Android application built during internship to learn modern Android development practices.</p>
+                <a href="https://github.com/knight-r/NeatFlix" class="project-link" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+
+            <div class="project-card">
+                <h3><i class="fas fa-cloud-sun"></i> Weather App</h3>
+                <p>A comprehensive weather application demonstrating API integration and modern UI design.</p>
+                <a href="https://github.com/knight-r/WeatherAppDemo" class="project-link" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="content-section" id="skills">
+            <h2 class="section-title">Skills & Technologies</h2>
+            
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><i class="fas fa-code"></i> Programming Languages</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Kotlin</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">C</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-mobile-alt"></i> Android Technologies</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">MVVM Architecture</span>
+                        <span class="skill-tag">Camera2 API</span>
+                        <span class="skill-tag">Room DB</span>
+                        <span class="skill-tag">Kotlin Coroutines</span>
+                        <span class="skill-tag">Retrofit</span>
+                        <span class="skill-tag">Fragments</span>
+                        <span class="skill-tag">Navigation Components</span>
+                        <span class="skill-tag">WorkManager</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-tools"></i> Development Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Android Studio</span>
+                        <span class="skill-tag">Firebase</span>
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">GitLab</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-heart"></i> Interests</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Android Development</span>
+                        <span class="skill-tag">Data Structures & Algorithms</span>
+                        <span class="skill-tag">OOPs</span>
+                        <span class="skill-tag">Competitive Programming</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="content-section" id="achievements">
+            <h2 class="section-title">Achievements & Certifications</h2>
+            
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <h4><i class="fas fa-trophy"></i> Google Kick Start 2021</h4>
+                    <p>Ranked <strong>807</strong> in <strong>Round H</strong> of Google Kick Start 2021</p>
+                </div>
+
+                <div class="achievement-card">
+                    <h4><i class="fas fa-medal"></i> Google Code Jam 2021</h4>
+                    <p>Qualified <strong>Online Qualification Round</strong> of Google Code Jam 2021</p>
+                </div>
+
+                <div class="achievement-card">
+                    <h4><i class="fas fa-star"></i> CodeChef 5 Star</h4>
+                    <p><strong>5 star rating</strong> at CodeChef and ranked <strong>41</strong> in CodeChef Starters 33 Division 2</p>
+                </div>
+
+                <div class="achievement-card">
+                    <h4><i class="fas fa-code"></i> Codeforces Specialist</h4>
+                    <p>Achieved <strong>Specialist</strong> rating on Codeforces platform</p>
+                </div>
+
+                <div class="achievement-card">
+                    <h4><i class="fas fa-laptop-code"></i> LeetCode Contests</h4>
+                    <p>Solved all <strong>4 questions</strong> in LeetCode Biweekly Contests 84 and 85</p>
+                </div>
+
+                <div class="achievement-card">
+                    <h4><i class="fas fa-brain"></i> Problem Solving</h4>
+                    <p>Solved <strong>2000+</strong> coding problems across LeetCode, InterviewBit, Codeforces, CodeChef, HackerEarth, and AtCoder</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = link.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Profile image upload functionality
+        const profileImageInput = document.getElementById('profileImageInput');
+        const profileImage = document.getElementById('profileImage');
+
+        profileImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImage.src = e.target.result;
+                    profileImage.style.animation = 'fadeIn 0.5s ease-out';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Smooth scrolling and animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 0.6s ease-out';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.card, .achievement-card, .project-card, .skill-category').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Add some interactive animations
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+            tag.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(2deg)';
+            });
+            
+            tag.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    </script>
+</body>
+</html>
